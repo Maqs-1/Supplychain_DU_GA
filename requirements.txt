@@ -6,3 +6,4 @@ pypdf
 python-dotenv
 streamlit
 tavily-python
+langchain-tavily
