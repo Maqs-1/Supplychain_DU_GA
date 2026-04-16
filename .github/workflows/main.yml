@@ -1,0 +1,60 @@
+name: CI/CD Supply Chain Agent
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # Build de l'image avec injection de la clé Google pour engine_rag.py
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+            --build-arg GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }} .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Connexion au registre ECR
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
+            
+            # Arrêt de l'ancien conteneur
+            docker stop supply-chain-agent || true
+            docker rm supply-chain-agent || true
+            
+            # Nettoyage des anciennes images pour libérer de l'espace sur l'EC2
+            docker image prune -af
+            
+            # Lancement du nouveau conteneur avec injection des secrets d'exécution
+            docker run -d --name supply-chain-agent \
+              -p 8501:8501 \
+              -e GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }} \
+              -e TAVILY_API_KEY=${{ secrets.TAVILY_API_KEY }} \
+              ${{ steps.build-image.outputs.image }}
