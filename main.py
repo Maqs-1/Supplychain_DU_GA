@@ -1,8 +1,4 @@
 import streamlit as st
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 import ast
 import base64
 import html
@@ -16,30 +12,6 @@ def _img_to_data_url(path: str) -> str:
         data = base64.b64encode(f.read()).decode()
     ext = path.rsplit(".", 1)[-1]
     return f"data:image/{ext};base64,{data}"
-=======
-import time
-import ast
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
-import time
-import ast
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
-import time
-import ast
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
-import ast
-import base64
-import html
-
-# ─── UTILITAIRE IMAGE ────────────────────────────────────────────────────────
-def _img_to_data_url(path: str) -> str:
-    with open(path, "rb") as f:
-        data = base64.b64encode(f.read()).decode()
-    ext = path.rsplit(".", 1)[-1]
-    return f"data:image/{ext};base64,{data}"
->>>>>>> 0e32b41 (Mis à jour de l'UI)
 
 # ─── TENTATIVE D'IMPORTATION (RÉSILIENCE) ────────────────────────────────────
 AGENT_AVAILABLE = False
@@ -53,9 +25,6 @@ except Exception as e:
     IMPORT_ERROR = str(e)
 
 # ─── CONFIGURATION DE LA PAGE ────────────────────────────────────────────────
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 st.set_page_config(page_title="SYNTHFLOW AI - Supply Chain", page_icon="⚓", layout="centered")
 
 # ─── MESSAGE D'ACCUEIL ───────────────────────────────────────────────────────
@@ -133,29 +102,6 @@ if "active_session_id" not in st.session_state:
         st.session_state.active_session_id = next(iter(st.session_state.sessions))
     else:
         st.session_state.active_session_id = _new_session()
-=======
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-st.set_page_config(page_title="LOGIX AI - Supply Chain", page_icon="⚓", layout="centered")
-
-# ─── INITIALISATION DU SESSION STATE (avant le CSS) ──────────────────────────
-if "dark_mode" not in st.session_state:
-    st.session_state.dark_mode = False
-if "messages" not in st.session_state:
-    st.session_state.messages = [
-        {"role": "assistant", "content": "Bonjour. Je suis **LOGIX**, votre assistant expert en Supply Chain.\n\nJe suis connecté à vos bases de données internes et au web. Vous pouvez me demander :\n- Une recherche sur les Incoterms ou vos contrats (PDF).\n- Le calcul d'une empreinte carbone maritime.\n- La météo en temps réel d'un port.\n- L'actualité du fret maritime.\n\nComment puis-je optimiser vos opérations aujourd'hui ?"}
-    ]
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
 
 if "agent" not in st.session_state and AGENT_AVAILABLE:
     try:
@@ -163,16 +109,10 @@ if "agent" not in st.session_state and AGENT_AVAILABLE:
     except:
         st.session_state.agent = None
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 # ─── SESSION ACTIVE ───────────────────────────────────────────────────────────
 sid = st.session_state.active_session_id
 session = st.session_state.sessions[sid]
 
-=======
->>>>>>> 0e32b41 (Mis à jour de l'UI)
 # ─── RESSOURCES SELON LE THÈME ────────────────────────────────────────────────
 is_dark = st.session_state.dark_mode
 
@@ -180,7 +120,6 @@ LOGO   = "images/app-name-dark.png"  if is_dark else "images/app-name-white.png"
 AVATAR = _img_to_data_url("images/app-avatar-dark.png" if is_dark else "images/app-avatar-white.png")
 
 # ─── VARIABLES CSS SELON LE THÈME ────────────────────────────────────────────
-<<<<<<< HEAD
 _bg           = "#0B0E14" if is_dark else "#FFFFFF"
 _sidebar_bg   = "#0D1117" if is_dark else "#F8FAFC"
 _text         = "#E2E8F0" if is_dark else "#1E293B"
@@ -193,18 +132,6 @@ _input_border = "rgba(255,255,255,0.1)" if is_dark else "rgba(0,0,0,0.1)"
 _placeholder  = "#94A3B8"
 _session_active_bg = "rgba(59,130,246,0.15)" if is_dark else "rgba(59,130,246,0.1)"
 _session_active_border = "rgba(59,130,246,0.4)"
-=======
-_bg          = "#0B0E14" if is_dark else "#FFFFFF"
-_sidebar_bg  = "#0D1117" if is_dark else "#F8FAFC"
-_text        = "#E2E8F0" if is_dark else "#1E293B"
-_faq_hover   = "#60A5FA" if is_dark else "#2563EB"
-_msg_border  = "rgba(255,255,255,0.07)" if is_dark else "rgba(0,0,0,0.08)"
-_user_text   = "#E2E8F0" if is_dark else "#1E293B"
-_sb_border   = "rgba(255,255,255,0.06)" if is_dark else "#E2E8F0"
-_input_bg     = "#1A1F2E" if is_dark else "#FFFFFF"
-_input_border = "rgba(255,255,255,0.1)" if is_dark else "rgba(0,0,0,0.1)"
-_placeholder  = "#94A3B8" if is_dark else "#94A3B8"
->>>>>>> 0e32b41 (Mis à jour de l'UI)
 
 # ─── DESIGN CSS DYNAMIQUE ────────────────────────────────────────────────────
 st.markdown(f"""
@@ -357,7 +284,6 @@ st.markdown(f"""
         text-decoration: none !important;
     }}
 
-<<<<<<< HEAD
     /* Sessions passées */
     .session-item {{
         display: flex;
@@ -384,8 +310,6 @@ st.markdown(f"""
         font-size: 0.8rem;
     }}
 
-=======
->>>>>>> 0e32b41 (Mis à jour de l'UI)
     /* Questions fréquentes — items de liste cliquables */
     [data-testid="stSidebar"] button[kind="secondary"],
     [data-testid="stSidebar"] button[kind="secondary"] * {{
@@ -415,40 +339,14 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ─── SIDEBAR ─────────────────────────────────────────────────────────────────
-<<<<<<< HEAD
 with st.sidebar:
     st.image(LOGO)
 
-=======
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-# ─── SIDEBAR (PANNEAU DE CONTRÔLE & QUESTIONS) ───────────────────────────────
-with st.sidebar:
-    st.title("⚓ LOGIX")
-    
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
-with st.sidebar:
-    st.image(LOGO)
-
->>>>>>> 0e32b41 (Mis à jour de l'UI)
     if AGENT_AVAILABLE:
         st.markdown('<div class="status-badge status-online">🟢 Système Opérationnel</div>', unsafe_allow_html=True)
     else:
         st.markdown('<div class="status-badge status-offline">🔴 Hors Ligne</div>', unsafe_allow_html=True)
         st.error(f"Détail technique : \n`{IMPORT_ERROR}`")
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 
     st.markdown("---")
 
@@ -483,57 +381,10 @@ with st.sidebar:
         if st.button("• Actus : Prix du fret maritime"):
             clicked_prompt = "Quelles sont les actualités récentes sur les prix du fret maritime ?"
         if st.button("• Politique RSE interne"):
-=======
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-    
-=======
-
->>>>>>> 0e32b41 (Mis à jour de l'UI)
-    st.markdown("---")
-    if st.button("Nouvelle session", type="primary", use_container_width=True):
-        st.session_state.messages = [st.session_state.messages[0]]
-        st.session_state.chat_history = []
-        st.rerun()
-
-    st.markdown("---")
-    st.markdown("### Questions fréquentes")
-
-    clicked_prompt = None
-
-    if AGENT_AVAILABLE:
-        if st.button("• Empreinte CO₂ (Shanghai - Le Havre)"):
-            clicked_prompt = "Calcule l'empreinte CO2 pour 200 tonnes de Shanghai au Havre."
-        if st.button("• Météo (Port de Rotterdam)"):
-            clicked_prompt = "Quelle est la météo actuelle au port de Rotterdam ?"
-        if st.button("• Responsabilités Incoterm FOB"):
-            clicked_prompt = "Quelles sont les responsabilités sous l'Incoterm FOB d'après nos documents ?"
-        if st.button("• Actus : Prix du fret maritime"):
-            clicked_prompt = "Quelles sont les actualités récentes sur les prix du fret maritime ?"
-<<<<<<< HEAD
-        if st.button("📄 Politique RSE interne", use_container_width=True):
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
-        if st.button("• Politique RSE interne"):
->>>>>>> 0e32b41 (Mis à jour de l'UI)
             clicked_prompt = "Quelles sont les règles de notre politique RSE interne ?"
 
     st.markdown("---")
     st.markdown("### Capacités")
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 0e32b41 (Mis à jour de l'UI)
     st.markdown("-**RAG** : Analyse de documents internes")
     st.markdown("-**Web** : Recherche d'actualités")
     st.markdown("-**Outils** : Calculs & Empreinte CO₂")
@@ -544,7 +395,6 @@ with st.sidebar:
     if dark != st.session_state.dark_mode:
         st.session_state.dark_mode = dark
         st.rerun()
-<<<<<<< HEAD
 
 # ─── AFFICHAGE DE LA CONVERSATION ────────────────────────────────────────────
 for message in session["messages"]:
@@ -557,49 +407,10 @@ for message in session["messages"]:
     else:
         with st.chat_message("assistant", avatar=AVATAR):
             st.markdown(message["content"])
-=======
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-    st.markdown("- 📄 **RAG** : Analyse de documents internes")
-    st.markdown("- 🌍 **Web** : Recherche d'actualités")
-    st.markdown("- 🧮 **Outils** : Calculs & Empreinte CO₂")
-    st.markdown("- 🌤️ **Météo** : Conditions portuaires")
-
-# ─── AFFICHAGE DE LA CONVERSATION ────────────────────────────────────────────
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
-
-# ─── AFFICHAGE DE LA CONVERSATION ────────────────────────────────────────────
-for message in st.session_state.messages:
-    if message["role"] == "user":
-        escaped = html.escape(message["content"])
-        st.markdown(
-            f'<div class="user-bubble"><div class="user-bubble-content">{escaped}</div></div>',
-            unsafe_allow_html=True
-        )
-    else:
-        with st.chat_message("assistant", avatar=AVATAR):
-            st.markdown(message["content"])
->>>>>>> 0e32b41 (Mis à jour de l'UI)
 
 # ─── BARRE DE SAISIE ET TRAITEMENT ───────────────────────────────────────────
 input_placeholder = "Posez votre question opérationnelle..." if AGENT_AVAILABLE else "Connexion au moteur IA impossible."
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 user_input = st.chat_input(input_placeholder, disabled=not AGENT_AVAILABLE)
 
 prompt = clicked_prompt or user_input
@@ -626,49 +437,6 @@ if prompt:
 
                 raw_output = response_obj["output"]
 
-=======
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-# Interception de la saisie au clavier
-=======
->>>>>>> 0e32b41 (Mis à jour de l'UI)
-user_input = st.chat_input(input_placeholder, disabled=not AGENT_AVAILABLE)
-
-prompt = clicked_prompt or user_input
-
-if prompt:
-
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    escaped = html.escape(prompt)
-    st.markdown(
-        f'<div class="user-bubble"><div class="user-bubble-content">{escaped}</div></div>',
-        unsafe_allow_html=True
-    )
-
-    with st.chat_message("assistant", avatar=AVATAR):
-        with st.status("Analyses en cours...", expanded=False) as status:
-            try:
-                response_obj = st.session_state.agent.invoke({
-                    "input": prompt,
-                    "chat_history": st.session_state.chat_history
-                })
-
-                raw_output = response_obj["output"]
-<<<<<<< HEAD
-                
-                # --- FILTRE DE NETTOYAGE STRICT (JSON/AST) ---
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
-
->>>>>>> 0e32b41 (Mis à jour de l'UI)
                 if isinstance(raw_output, list):
                     clean_text = "".join([item.get("text", "") if isinstance(item, dict) else str(item) for item in raw_output])
                     full_response = clean_text
@@ -681,10 +449,6 @@ if prompt:
                         full_response = raw_output
                 else:
                     full_response = str(raw_output)
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 
                 status.update(label="Analyse terminée", state="complete")
 
@@ -702,43 +466,3 @@ if prompt:
 
     _save_sessions()
     st.rerun()
-=======
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-                # ---------------------------------------------
-                
-=======
-
->>>>>>> 0e32b41 (Mis à jour de l'UI)
-                status.update(label="Analyse terminée", state="complete")
-
-            except Exception as e:
-                full_response = f"⚠️ Échec du processus : {str(e)}"
-                status.update(label="Erreur d'exécution", state="error")
-
-        st.markdown(full_response)
-
-    st.session_state.messages.append({"role": "assistant", "content": full_response})
-    st.session_state.chat_history.extend([
-        HumanMessage(content=prompt),
-        AIMessage(content=full_response)
-    ])
-<<<<<<< HEAD
-    
-    # Rafraîchissement forcé pour actualiser l'interface
-<<<<<<< HEAD
-<<<<<<< HEAD
-    st.rerun()
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
-    st.rerun()
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
-    st.rerun()
->>>>>>> d536816 (feat: finalisation de l'interface LOGIX V2.2 sur branche dédiée)
-=======
-
-    st.rerun()
->>>>>>> 0e32b41 (Mis à jour de l'UI)
