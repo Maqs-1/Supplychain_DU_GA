@@ -1,14 +1,15 @@
 import os
 import requests
 from dotenv import load_dotenv
-from langchain_core.prompts import ChatPromptTemplate
+
+# Imports Langchain corrigés
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain.agents import create_agent
+from langchain_classic.agents import create_tool_calling_agent, AgentExecutor
 from langchain.tools import tool
-from langchain_tavily.tools import TavilySearchResults
+from langchain_tavily import TavilySearch
 
-from engine_rag import query_documents
-
+# Import local unique
 from engine_rag import query_documents
 
 load_dotenv()
@@ -42,7 +43,6 @@ DISTANCES_MARITIMES = {
 
 FACTEUR_CO2 = 0.015  # kg CO2 par tonne-km (standard IMO)
 
-
 # ==========================================
 # 1. OUTILS DE L'AGENT
 # ==========================================
@@ -52,7 +52,6 @@ def documents_internes(question: str) -> str:
     """Utile UNIQUEMENT pour chercher des informations dans les documents PDF de l'entreprise (Incoterms, RSE, contrats, politiques internes)."""
     return query_documents(question)
 
-
 @tool
 def calculatrice(expression: str) -> str:
     """Utile pour faire des calculs mathématiques. L'entrée doit être une expression mathématique (ex: 15 * 840 * 1.12)."""
@@ -60,7 +59,6 @@ def calculatrice(expression: str) -> str:
         return str(eval(expression, {"__builtins__": {}}, {}))
     except Exception:
         return "Erreur : Impossible de calculer cette formule."
-
 
 @tool
 def meteo_portuaire(port: str) -> str:
@@ -75,7 +73,6 @@ def meteo_portuaire(port: str) -> str:
             return f"Impossible de récupérer la météo pour {port}."
     except Exception:
         return "Le service météo est actuellement indisponible."
-
 
 @tool
 def calculateur_co2(input: str) -> str:
@@ -137,18 +134,17 @@ ou compensation via programme de reforestation certifié."""
     except Exception as e:
         return f"Erreur lors du calcul CO2 : {str(e)}"
 
-
-recherche_web = TavilySearchResults(
-    max_results=3,
-    description="Utile pour chercher des informations récentes sur internet : actualités, prix du fret, sanctions commerciales, réglementations douanières, cours des matières premières, etc."
-)
-
-
 # ==========================================
 # 2. MOTEUR DE L'AGENT
 # ==========================================
 
 def get_agent():
+    # Initialisation reculée à l'intérieur de la fonction
+    recherche_web = TavilySearch(
+        max_results=3,
+        description="Utile pour chercher des informations récentes sur internet : actualités, prix du fret, sanctions commerciales, réglementations douanières, cours des matières premières, etc."
+    )
+
     llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0)
 
     tools = [documents_internes, calculatrice, meteo_portuaire, calculateur_co2, recherche_web]
@@ -189,3 +185,8 @@ Réponds toujours en français, de manière professionnelle mais accessible.""")
         verbose=True,
         handle_parsing_errors=True
     )
+
+if __name__ == "__main__":
+    print("Tentative de création de l'agent...")
+    agent = get_agent()
+    print("SUCCÈS : L'agent a été créé !")
