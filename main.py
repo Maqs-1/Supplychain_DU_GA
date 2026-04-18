@@ -5,6 +5,44 @@ import html
 import uuid
 import json
 import os
+import re
+from urllib.parse import urlparse
+
+# ─── EXTRACTION DES SOURCES ──────────────────────────────────────────────────
+def _extract_sources(intermediate_steps: list) -> str:
+    sources = []
+    seen = set()
+
+    for action, observation in intermediate_steps:
+        tool = action.tool
+        obs = str(observation)
+
+        if tool == "documents_internes":
+            for match in re.findall(r"SOURCE\s*:\s*(.+)", obs):
+                entry = f"doc: {match.strip()}"
+                if entry not in seen:
+                    seen.add(entry)
+                    sources.append(entry)
+
+        elif tool == "recherche_web":
+            urls = re.findall(r'https?://[^\s\'">\]]+', obs)
+            for url in urls[:3]:
+                domain = urlparse(url).netloc.replace("www.", "")
+                if domain:
+                    entry = f"web: {domain}"
+                    if entry not in seen:
+                        seen.add(entry)
+                        sources.append(entry)
+
+        elif tool == "meteo_portuaire":
+            entry = "météo: wttr.in"
+            if entry not in seen:
+                seen.add(entry)
+                sources.append(entry)
+
+    if not sources:
+        return ""
+    return "\n\n---\n*Sources : " + " · ".join(sources) + "*"
 
 # ─── UTILITAIRE IMAGE ────────────────────────────────────────────────────────
 def _img_to_data_url(path: str) -> str:
@@ -449,6 +487,10 @@ if prompt:
                         full_response = raw_output
                 else:
                     full_response = str(raw_output)
+
+                # Ajout des sources
+                steps = response_obj.get("intermediate_steps", [])
+                full_response += _extract_sources(steps)
 
                 status.update(label="Analyse terminée", state="complete")
 
