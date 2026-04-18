@@ -11,6 +11,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Build vectorstore
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          pip install -q langchain langchain-google-genai langchain-community langchain-chroma chromadb pypdf python-dotenv "numpy<2.0.0"
+          python engine_rag.py
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:

@@ -4,6 +4,5 @@
 venv/
 .venv/
 __pycache__/
-vectorstore/
 sessions.json
 *.pyc
