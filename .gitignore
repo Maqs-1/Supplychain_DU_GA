@@ -2,3 +2,5 @@
 venv
 .venv
 __pycache__/
+sessions.json
+vectorstore/22e65061-325c-4879-a920-41e8433458d4/

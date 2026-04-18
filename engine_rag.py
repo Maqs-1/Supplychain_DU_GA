@@ -8,8 +8,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-embeddings_model = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
-
+# L'initialisation est désormais sécurisée dans une fonction
+def get_embeddings():
+    return GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
 
 def build_vectorstore():
     print("--- DÉMARRAGE DE L'INGESTION ---")
@@ -34,6 +35,7 @@ def build_vectorstore():
 
     batch_size = 100
     vectorstore = None
+    embeddings_model = get_embeddings()
 
     for i in range(0, len(splits), batch_size):
         batch = splits[i: i + batch_size]
@@ -51,11 +53,11 @@ def build_vectorstore():
     print("\nSUCCÈS : Base de données vectorielle prête.")
     return vectorstore
 
-
 def query_documents(question: str) -> str:
     if not os.path.exists("./vectorstore"):
         return "Erreur : La base de données documentaire n'a pas encore été créée. Lance d'abord engine_rag.py."
 
+    embeddings_model = get_embeddings()
     vectorstore = Chroma(persist_directory="./vectorstore", embedding_function=embeddings_model)
 
     docs = vectorstore.similarity_search(question, k=5)
@@ -67,7 +69,6 @@ def query_documents(question: str) -> str:
         formatted_results.append(f"SOURCE : {filename}\nCONTENU : {doc.page_content}")
 
     return "\n\n---\n\n".join(formatted_results)
-
 
 if __name__ == "__main__":
     build_vectorstore()
