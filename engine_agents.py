@@ -183,7 +183,8 @@ Réponds toujours en français, de manière professionnelle mais accessible.""")
         agent=agent,
         tools=tools,
         verbose=True,
-        handle_parsing_errors=True
+        handle_parsing_errors=True,
+        return_intermediate_steps=True
     )
 
 if __name__ == "__main__":
